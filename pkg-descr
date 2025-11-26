@@ -1,0 +1,7 @@
+A Language Server (LSP) for the Janet programming language (lang/janet).
+
+Current features:
+* Auto-completion based on symbols in the Janet Standard Library and defined in user code
+* On-hover definition of symbols as returned by (doc ,symbol)
+* Inline compiler errors
+* Pop-up signature help

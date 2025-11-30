@@ -8,9 +8,6 @@ There is one awkward dependency: cmd.
 judge works with that version too. The bad news is that `jpm` gets confused and
 won't make a lockfile.
 
-But its not that hard to cobble one together. However that doesn't use the
-distfiles.
-
 The real tradjedy here is that a janet-lsp.jimage is an available asset on
 github. You can literally `janet -i janet-lsp.jimage`. But strangely you can
 not use that with jpm(1) to create a standalone exe.

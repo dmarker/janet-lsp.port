@@ -28,8 +28,8 @@ PLIST_FILES=	bin/janet-lsp
 
 # Install in whatever order was given in the GH_TUPLE
 do-build:
-	for d in `ls -d ${WRKSRC}/.deps/[0-9*]`; do \
-		cd $$d && jpm --tree=${WRKSRC}/jpm_tree install; \
+	cd ${WRKSRC}/.deps && for d in `ls | sort -n`; do \
+		cd ${WRKSRC}/.deps/$$d && jpm --tree=${WRKSRC}/jpm_tree install; \
 	done
 	cd ${WRKSRC} && jpm --tree=${WRKSRC}/jpm_tree build
 

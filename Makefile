@@ -18,19 +18,20 @@ GH_TAGNAME=	v${DISTVERSION}
 
 # These are a little more recent that latest releases. But there is no lockfile so
 # by default jpm(1) would use HEAD. There is also a conflict for cmd and CFiggers is
-# more recent. Add them to .deps/<order-to-be-built>
-GH_TUPLE=	CFiggers:jayson:4f54041617340c8ff99bc1e6b285b720184965e2:jayson/.deps/1 \
-		janet-lang:spork:7b780ccd6e0776dcbfc0427b553609f50bd92a9a:spork/.deps/2 \
-		CFiggers:cmd:b0a34d6e854578bd672d43303e80b9777af08b42:cmd/.deps/3 \
-		ianthehenry:judge:3b921850006200a31b015558a72b8a62672eac8e:judge/.deps/4
+# more recent.
+GH_TUPLE=	CFiggers:cmd:${_CMD_SHA_}:cmd \
+		CFiggers:jayson:${_JAYSON_SHA_}:jayson \
+		ianthehenry:judge:${_JUDGE_SHA_}:judge \
+		janet-lang:spork:${_SPORK_SHA_}:spork
 
 PLIST_FILES=	bin/janet-lsp
 
-# Install in whatever order was given in the GH_TUPLE
+# The only dependency before building janet-lsp is that `judge` depends on `cmd`.
 do-build:
-	cd ${WRKSRC}/.deps && for d in `ls | sort -n`; do \
-		cd ${WRKSRC}/.deps/$$d && jpm --tree=${WRKSRC}/jpm_tree install; \
-	done
+	cd ${WRKDIR}/cmd-${_CMD_SHA_} && jpm --tree=${WRKSRC}/jpm_tree install
+	cd ${WRKDIR}/jayson-${_JAYSON_SHA_} && jpm --tree=${WRKSRC}/jpm_tree install
+	cd ${WRKDIR}/judge-${_JUDGE_SHA_} && jpm --tree=${WRKSRC}/jpm_tree install
+	cd ${WRKDIR}/spork-${_SPORK_SHA_} && jpm --tree=${WRKSRC}/jpm_tree install
 	cd ${WRKSRC} && jpm --tree=${WRKSRC}/jpm_tree build
 
 do-install:
@@ -39,5 +40,11 @@ do-install:
 
 do-test:
 	cd ${WRKSRC} && jpm test -l
+
+# Make it easy to find dependencies so we don't have to do extra copy
+_CMD_SHA_ = b0a34d6
+_JAYSON_SHA_ = 4f54041
+_JUDGE_SHA_ = 3b92185
+_SPORK_SHA_ = 7b780cc
 
 .include <bsd.port.mk>
